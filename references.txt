@@ -1,0 +1,2 @@
+Basics:
+https://www.geeksforgeeks.org/socket-programming-python/
