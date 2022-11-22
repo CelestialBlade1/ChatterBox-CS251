@@ -1,2 +1,8 @@
 Basics:
 https://www.geeksforgeeks.org/socket-programming-python/
+
+Sentdex Tutorial:
+https://pythonprogramming.net/server-chatroom-sockets-tutorial-python-3/
+
+I/O Multiplexing:
+http://pymotw.com/2/select/#:~:text=Python's%20select()%20function%20is,or%20a%20communication%20error%20occurs.
