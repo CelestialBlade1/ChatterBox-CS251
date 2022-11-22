@@ -37,5 +37,3 @@ def check_connection(phone):
         return "OFFLINE"
     else:
         return output[0]
-
-register_user("Aman", 7977265537, 20, 'asdfghjkl')
