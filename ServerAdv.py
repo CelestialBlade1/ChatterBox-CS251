@@ -1,13 +1,13 @@
 import socket
 import select
-
+import kbhiT as kb
+import time
+import serverfunctions
+from clientfunctions import Crypt
 HEADER_LENGTH = 10
 
 IP = "127.0.0.1"
 PORT = 1234
-
-def checkInDatabase(username, password):
-    return True
 
 # Create a socket
 # socket.AF_INET - address family, IPv4, some otehr possible are AF_INET6, AF_BLUETOOTH, AF_UNIX
@@ -32,36 +32,16 @@ sockets_list = [server_socket]
 # List of connected clients - socket as a key, user header and name as data
 clients = {}
 
-print(f'Listening for connections on {IP}:{PORT} ...')
+print(f'Listening for connections on {IP}:{PORT}...')
 
 # Handles message receiving
-def receive_message(client_socket):
 
-    try:
-
-        # Receive our "header" containing message length, it's size is defined and constant
-        message_header = client_socket.recv(HEADER_LENGTH)
-
-        # If we received no data, client gracefully closed a connection, for example using socket.close() or socket.shutdown(socket.SHUT_RDWR)
-        if not len(message_header):
-            return False
-
-        # Convert header to int value
-        message_length = int(message_header.decode('utf-8').strip())
-
-        # Return an object of message header and message data
-        return {'header': message_header, 'data': client_socket.recv(message_length)}
-
-    except:
-
-        # If we are here, client closed connection violently, for example by pressing ctrl+c on his script
-        # or just lost his connection
-        # socket.close() also invokes socket.shutdown(socket.SHUT_RDWR) what sends information about closing the socket (shutdown read/write)
-        # and that's also a cause when we receive an empty message
-        return False
-
+timeout = time.time()
 while True:
-
+    K = kb.KBHit()
+    if K.kbhit():
+        server_socket.shutdown(socket.SHUT_RDWR)
+        break
     # Calls Unix select() system call or Windows select() WinSock call with three parameters:
     #   - rlist - sockets to be monitored for incoming data
     #   - wlist - sockets for data to be send to (checks if for example buffers are not full and socket is ready to send some data)
@@ -77,6 +57,7 @@ while True:
     # Iterate over notified sockets
     for notified_socket in read_sockets:
 
+        
         # If notified socket is a server socket - new connection, accept it
         if notified_socket == server_socket:
 
@@ -86,12 +67,22 @@ while True:
             client_socket, client_address = server_socket.accept()
 
             # Client should send his name right away, receive it
-            user = receive_message(client_socket)
+            user = serverfunctions.receive_message(client_socket)
 
             # If False - client disconnected before he sent his name
             if user is False:
                 continue
-
+            
+            pwd = serverfunctions.receive_message(client_socket)
+            
+            
+            if not serverfunctions.credentials_valid(user['data'], pwd['data']):
+                client_socket.send("## Invalid Credentials ##")
+                client_socket.close()
+                continue
+            
+            
+            print(pwd['data'])
             # Add accepted socket to select.select() list
             sockets_list.append(client_socket)
 
@@ -104,7 +95,7 @@ while True:
         else:
 
             # Receive message
-            message = receive_message(notified_socket)
+            message = serverfunctions.receive_message(notified_socket)
 
             # If False, client disconnected, cleanup
             if message is False:
@@ -141,4 +132,3 @@ while True:
 
         # Remove from our list of users
         del clients[notified_socket]
-    server_socket.close()        

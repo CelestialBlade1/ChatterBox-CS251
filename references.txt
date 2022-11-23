@@ -4,5 +4,18 @@ https://www.geeksforgeeks.org/socket-programming-python/
 Sentdex Tutorial:
 https://pythonprogramming.net/server-chatroom-sockets-tutorial-python-3/
 
+Cryptodome:
+https://stackoverflow.com/questions/27335726/how-do-i-encrypt-and-decrypt-a-string-in-python
+
 I/O Multiplexing:
 http://pymotw.com/2/select/#:~:text=Python's%20select()%20function%20is,or%20a%20communication%20error%20occurs.
+
+Key generator
+https://www.geeksforgeeks.org/python-generate-random-string-of-given-length/
+
+kbhit code for Non-blocking input:
+https://stackoverflow.com/questions/2408560/non-blocking-console-input
+
+
+
+

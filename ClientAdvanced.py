@@ -1,48 +1,47 @@
 import socket
 import select
+import string
 import errno
+import kbhiT
 import sys
-
+import clientfunctions as f
+import time
+import random
 HEADER_LENGTH = 10
 
 IP = "127.0.0.1"
 PORT = 1234
 my_username = input("Username: ")
-my_password = input("Password: ")
+my_pwd = input("Password: ")
 
-# Create a socket
-# socket.AF_INET - address family, IPv4, some otehr possible are AF_INET6, AF_BLUETOOTH, AF_UNIX
-# socket.SOCK_STREAM - TCP, conection-based, socket.SOCK_DGRAM - UDP, connectionless, datagrams, socket.SOCK_RAW - raw IP packets
-client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# using random.choices()
+# generating random strings
+ClientKey = str(''.join(random.choices(string.ascii_uppercase +
+                             string.digits, k=16)))
 
-# Connect to a given ip and port
-client_socket.connect((IP, PORT))
 
-# Set connection to non-blocking state, so .recv() call won;t block, just return some exception we'll handle
-client_socket.setblocking(False)
+client_socket = f.new_socket(IP, PORT)
 
-# Prepare username and header and send them
-# We need to encode username to bytes, then count number of bytes and prepare header of fixed size, that we encode to bytes as well
-username = my_username.encode('utf-8')
-username_header = f"{len(username):<{HEADER_LENGTH}}".encode('utf-8')
-client_socket.send(username_header + username)
+f.credential_login(client_socket, my_username, my_pwd, ClientKey)
 
-password = my_password.encode('utf-8')
-password_header = f"{len(password):<{HEADER_LENGTH}}".encode('utf-8')
-client_socket.send(password_header + password)
 
 while True:
+    kb = kbhiT.KBHit()
 
-    # Wait for user to input a message
-    message = input(f'{my_username} > ')
+    if kb.kbhit():
+        # Wait for user to input a message
+        message = input(f'{my_username} > ')
+        if message.find("EXITNOW") != -1:
+            client_socket.close()
+            break
 
-    # If message is not empty - send it
-    if message:
+        # If message is not empty - send it
+        if message:
 
-        # Encode message to bytes, prepare header and convert to bytes, like for username above, then send
-        message = message.encode('utf-8')
-        message_header = f"{len(message):<{HEADER_LENGTH}}".encode('utf-8')
-        client_socket.send(message_header + message)
+            # Encode message to bytes, prepare header and convert to bytes, like for username above, then send
+            message = message.encode('utf-8')
+            message_header = f"{len(message):<{HEADER_LENGTH}}".encode('utf-8')
+            client_socket.send(message_header + message)
 
     try:
         # Now we want to loop over received messages (there might be more than one) and print them
