@@ -4,15 +4,19 @@ import string
 import errno
 import kbhiT
 import sys
+import pyDH
 import clientfunctions as f
 import time
 import random
 HEADER_LENGTH = 10
 
 IP = "127.0.0.1"
-PORT = 1234
+PORT = 13248
+CLIENT_KEY = str(pyDH.DiffieHellman())
+ 
 my_username = input("Username: ")
 my_pwd = input("Password: ")
+
 
 # using random.choices()
 # generating random strings
@@ -21,6 +25,21 @@ ClientKey = str(''.join(random.choices(string.ascii_uppercase +
 
 
 client_socket = f.new_socket(IP, PORT)
+
+# Asks loadbalancer to assign a server:
+userclient = "USERCLIENT".encode('utf-8')
+client_header = f"{len(userclient):<{HEADER_LENGTH}}".encode('utf-8')
+client_socket.send(client_header + userclient)
+time.sleep(2.5)
+
+# Receives new server details
+message_header = client_socket.recv(HEADER_LENGTH)
+message_length = int(message_header.decode('utf-8').strip())
+message = client_socket.recv(message_length).decode('utf-8')
+message_list = message.split(':')
+print(message_list)
+client_socket.close()
+client_socket = f.new_socket(message_list[0], int(message_list[1]))
 
 f.credential_login(client_socket, my_username, my_pwd, ClientKey)
 
@@ -39,9 +58,11 @@ while True:
         if message:
 
             # Encode message to bytes, prepare header and convert to bytes, like for username above, then send
+            
             message = message.encode('utf-8')
             message_header = f"{len(message):<{HEADER_LENGTH}}".encode('utf-8')
             client_socket.send(message_header + message)
+            
 
     try:
         # Now we want to loop over received messages (there might be more than one) and print them

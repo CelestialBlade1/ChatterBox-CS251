@@ -2,32 +2,57 @@ import socket
 import select
 import kbhiT as kb
 import time
+import sys
 import serverfunctions
 from clientfunctions import Crypt
 HEADER_LENGTH = 10
 
 IP = "127.0.0.1"
-PORT = 1234
-
+PORT = int(sys.argv[1])
+print(PORT)
 # Create a socket
 # socket.AF_INET - address family, IPv4, some otehr possible are AF_INET6, AF_BLUETOOTH, AF_UNIX
 # socket.SOCK_STREAM - TCP, conection-based, socket.SOCK_DGRAM - UDP, connectionless, datagrams, socket.SOCK_RAW - raw IP packets
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
 
 # SO_ - socket option
 # SOL_ - socket option level
 # Sets REUSEADDR (as a socket option) to 1 on socket
 server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
+
+
 # Bind, so server informs operating system that it's going to use given IP and port
 # For a server using 0.0.0.0 means to listen on all available interfaces, useful to connect locally to 127.0.0.1 and remotely to LAN interface IP
-server_socket.bind((IP, PORT))
 
-# This makes server listen to new connections
+server_socket.connect((IP, 13248))
+
+# Connect to Load Balancer
+
+name = f"SERVERTyu3349lkjn:{PORT}".encode('utf-8')
+name_header = f"{len(name):<{HEADER_LENGTH}}".encode('utf-8')
+server_socket.send(name_header + name )
+
+server_socket.close()
+
+
+# Create a socket
+# socket.AF_INET - address family, IPv4, some otehr possible are AF_INET6, AF_BLUETOOTH, AF_UNIX
+# socket.SOCK_STREAM - TCP, conection-based, socket.SOCK_DGRAM - UDP, connectionless, datagrams, socket.SOCK_RAW - raw IP packets
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+
+# SO_ - socket option
+# SOL_ - socket option level
+# Sets REUSEADDR (as a socket option) to 1 on socket
+server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+server_socket.bind((IP, PORT))
 server_socket.listen()
 
 # List of sockets for select.select()
 sockets_list = [server_socket]
+
 
 # List of connected clients - socket as a key, user header and name as data
 clients = {}
@@ -71,6 +96,7 @@ while True:
 
             # If False - client disconnected before he sent his name
             if user is False:
+                
                 continue
             
             pwd = serverfunctions.receive_message(client_socket)
@@ -99,6 +125,15 @@ while True:
 
             # If False, client disconnected, cleanup
             if message is False:
+                temp_socket = socket.socket()
+                temp_socket.connect(IP, 13428)
+                
+                # Connect to Load Balancer and update number of connections!
+                l = f"USERCLIENTSd567po:{PORT}".encode('utf-8')
+                l_header = f"{len(l):<{HEADER_LENGTH}}".encode('utf-8')
+                temp_socket.send(l_header + l)
+
+                temp_socket.close()
                 print('Closed connection from: {}'.format(clients[notified_socket]['data'].decode('utf-8')))
 
                 # Remove from list for socket.socket()

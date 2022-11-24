@@ -8,10 +8,12 @@ from base64 import b64encode, b64decode
 class Crypt:
 
     def __init__(self, salt='SlTeRlOHpygTYkP3'):
+        """Crypt created with salt"""
         self.salt = salt.encode('utf8')
         self.enc_dec_method = 'utf-8'
 
     def encrypt(self, str_to_enc, str_key):
+        """Performs standard encryption"""
         try:
             aes_obj = AES.new(str_key.encode('utf-8'), AES.MODE_CFB, self.salt)
             hx_enc = aes_obj.encrypt(str_to_enc.encode('utf8'))
@@ -26,6 +28,8 @@ class Crypt:
                 raise ValueError(value_error)
 
     def decrypt(self, enc_str, str_key):
+        """
+        Derypts the files """
         try:
             aes_obj = AES.new(str_key.encode('utf8'), AES.MODE_CFB, self.salt)
             str_tmp = b64decode(enc_str.encode(self.enc_dec_method))
