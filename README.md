@@ -32,13 +32,11 @@ Round Robin Algorithm: In this algorithm, we send a request to the load balancer
 We are using the Round Robin Algorithm in our project. Whenever a new request is made by a client, it selects the server the next server in the cycle . This prevents any server from getting overloaded by selecting a server in the cycle with lesser connections.
 
 ### Instructions to run code.
-    0. First open the load balancer as
+0.First open the load balancer as
+      ```python loadbalancer.py ROUNDROBIN```
+   
     
-    ```
-    python loadbalancer.py ROUNDROBIN
-    ```
-    
-    1. Next you want to launch the servers as:
+1. Next you want to launch the servers as:
     
     ```
     python server.py <localhost_port_no>
@@ -50,7 +48,7 @@ We are using the Round Robin Algorithm in our project. Whenever a new request is
     python server.py 8887
     `
     
-    2. Now the clients can be launched
+2. Now the clients can be launched
     
     ```
     python client.py <localhost_port_no>
