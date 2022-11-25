@@ -44,9 +44,9 @@ We are using the Round Robin Algorithm in our project. Whenever a new request is
     
     such as
     
-    `
+    ```
     python server.py 8887
-    `
+    ```
     
 2. Now the clients can be launched
     
@@ -54,7 +54,7 @@ We are using the Round Robin Algorithm in our project. Whenever a new request is
     python client.py <localhost_port_no>
     ```
     
-    3. The client interfaces are ready to be used. Enter recipient user IDs to send DMs.
+3. The client interfaces are ready to be used. Enter recipient user IDs to send DMs.
 
 
 
