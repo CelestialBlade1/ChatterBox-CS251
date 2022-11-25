@@ -123,7 +123,7 @@ while True:
                             if min_cons > server_connec[server][1]:
                                 min_cons = server_connec[server][1]
                                 min_server = server
-                    usercl = f"{server_connec[server][0][0]}:{server_connec[server][0][1]}"
+                    usercl = f"{server_connec[server][0][0]}:{server_connec[server][0][1]}".encode('utf-8')
                     cl_header = f"{len(usercl):<{HEADER_LENGTH}}".encode('utf-8')
                     in_socket.send(cl_header + usercl)
 

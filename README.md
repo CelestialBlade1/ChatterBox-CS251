@@ -5,10 +5,10 @@
 #### Made by Aman, Aditya and Vijay.
 
 ## Dependencies:-
-    1. Working installation of Postgres and a database named ChatDB.
+    1. Working installation of Postgres (run on 15) and a database named ChatDB.
     2. pyDH library for end to end encryption of messages.
     3. Select Library for multiplexing of sockets.
-    4. kbhiT library to detect keyboard hits.
+    4. kbhit library to detect keyboard hits.
 
 ## The Basic Idea:
 ![image](https://user-images.githubusercontent.com/105475348/203462031-232b8b42-2596-4dc7-a262-75d1321301b6.png)
@@ -32,10 +32,23 @@ Round Robin Algorithm: In this algorithm, we send a request to the load balancer
 We are using the Round Robin Algorithm in our project. Whenever a new request is made by a client, it selects the server the next server in the cycle . This prevents any server from getting overloaded by selecting a server in the cycle with lesser connections.
 
 ### Instructions to run code.
-    0. Make sure the dependencies mentioned are installed and working correctly.
-    1. Start Load Balancer using python3 loadbalancer.py ROUNDROBIN
-    2. Start the required number of servers using python3 ServerAdv.py <port_number>
-    3. Start the required number of clients by running python3 ClientAdvanced.py
+    0. First open the load balancer as
+    ```
+    python loadbalancer.py ROUNDROBIN
+    ```
+    1. Next you want to launch the servers as:
+    ```
+    python server.py <localhost_port_no>
+    ```
+    such as
+    ```
+    python server.py 8887
+    ```
+    2. Now the clients can be launched
+    ```
+    python client.py <localhost_port_no>
+    ```
+    3. The client interfaces are ready to be used. Enter recipient user IDs to send DMs.
 
 
 
