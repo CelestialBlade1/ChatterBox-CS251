@@ -4,6 +4,12 @@
 #### All code updates have been done on branches!
 #### Made by Aman, Aditya and Vijay.
 
+## Dependencies:-
+    1. Working installation of Postgres and a database named ChatDB.
+    2. pyDH library for end to end encryption of messages.
+    3. Select Library for multiplexing of sockets.
+    4. kbhiT library to detect keyboard hits.
+
 ## The Basic Idea:
 ![image](https://user-images.githubusercontent.com/105475348/203462031-232b8b42-2596-4dc7-a262-75d1321301b6.png)
 
@@ -21,8 +27,16 @@ Each user can broadcast a message on the group chat and it is received by all ot
 It will become more advanced as the Databse and Chat are merged.
 
 ### Load Balancing:
-Least Connections Algorithm:In this algorithm, traffic is directed to the server having the least traffic. This helps maintain the optimized performance, especially at peak hours by maintaining a uniform load at all the servers.
+Round Robin Algorithm: In this algorithm, we send a request to the load balancer to assign us the a server to evenly distribute the load. This is done by selecting the next server in a cycle to which the the previous client was connected.
 
-We are using the Least Connections Algorithm in our project. It is quite efficient as whenever a new request is made by a client, it selects the server with the least number of connections. This prevents any server from getting overloaded.
+We are using the Round Robin Algorithm in our project. Whenever a new request is made by a client, it selects the server the next server in the cycle . This prevents any server from getting overloaded by selecting a server in the cycle with lesser connections.
+
+### Instructions to run code.
+    0. Make sure the dependencies mentioned are installed and working correctly.
+    1. Start Load Balancer using python3 loadbalancer.py ROUNDROBIN
+    2. Start the required number of servers using python3 serverAdv.py <port_number>
+    3. Start the required number of clients by running python3 clientAdv.py
+
+
 
 

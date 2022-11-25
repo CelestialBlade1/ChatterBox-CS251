@@ -1,0 +1,283 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>clientfunctions module &#8212; ChatterBox  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="create_tables module" href="create_tables.html" />
+    <link rel="prev" title="ServerAdv module" href="ServerAdv.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-clientfunctions">
+<span id="clientfunctions-module"></span><h1>clientfunctions module<a class="headerlink" href="#module-clientfunctions" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="clientfunctions.Crypt">
+<em class="property">class </em><code class="descclassname">clientfunctions.</code><code class="descname">Crypt</code><span class="sig-paren">(</span><em>salt='SlTeRlOHpygTYkP3'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clientfunctions.html#Crypt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clientfunctions.Crypt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>A Class Encrypt and decrypt messages.</p>
+<dl class="method">
+<dt id="clientfunctions.Crypt.decrypt">
+<code class="descname">decrypt</code><span class="sig-paren">(</span><em>enc_str</em>, <em>str_key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clientfunctions.html#Crypt.decrypt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clientfunctions.Crypt.decrypt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Derypts the string using AES by providing the private key.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>enc_str</strong> – string to be decrypted.</li>
+<li><strong>str_key</strong> – private key for decryption.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The decrypted string.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="clientfunctions.Crypt.encrypt">
+<code class="descname">encrypt</code><span class="sig-paren">(</span><em>str_to_enc</em>, <em>str_key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clientfunctions.html#Crypt.encrypt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clientfunctions.Crypt.encrypt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs AES using public key of a user and encrypts the string.
+:param str_to_enc: String to be encrypted
+:param str_key: Key to be used for encryption</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The encrypted string.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="clientfunctions.bcolors">
+<em class="property">class </em><code class="descclassname">clientfunctions.</code><code class="descname">bcolors</code><a class="reference internal" href="_modules/clientfunctions.html#bcolors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clientfunctions.bcolors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Colors for formatting console outputs</p>
+<dl class="attribute">
+<dt id="clientfunctions.bcolors.BOLD">
+<code class="descname">BOLD</code><em class="property"> = '\x1b[1m'</em><a class="headerlink" href="#clientfunctions.bcolors.BOLD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clientfunctions.bcolors.ENDC">
+<code class="descname">ENDC</code><em class="property"> = '\x1b[0m'</em><a class="headerlink" href="#clientfunctions.bcolors.ENDC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clientfunctions.bcolors.FAIL">
+<code class="descname">FAIL</code><em class="property"> = '\x1b[91m'</em><a class="headerlink" href="#clientfunctions.bcolors.FAIL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clientfunctions.bcolors.HEADER">
+<code class="descname">HEADER</code><em class="property"> = '\x1b[95m'</em><a class="headerlink" href="#clientfunctions.bcolors.HEADER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clientfunctions.bcolors.OKBLUE">
+<code class="descname">OKBLUE</code><em class="property"> = '\x1b[94m'</em><a class="headerlink" href="#clientfunctions.bcolors.OKBLUE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clientfunctions.bcolors.OKCYAN">
+<code class="descname">OKCYAN</code><em class="property"> = '\x1b[96m'</em><a class="headerlink" href="#clientfunctions.bcolors.OKCYAN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clientfunctions.bcolors.OKGREEN">
+<code class="descname">OKGREEN</code><em class="property"> = '\x1b[92m'</em><a class="headerlink" href="#clientfunctions.bcolors.OKGREEN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clientfunctions.bcolors.UNDERLINE">
+<code class="descname">UNDERLINE</code><em class="property"> = '\x1b[4m'</em><a class="headerlink" href="#clientfunctions.bcolors.UNDERLINE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clientfunctions.bcolors.WARNING">
+<code class="descname">WARNING</code><em class="property"> = '\x1b[93m'</em><a class="headerlink" href="#clientfunctions.bcolors.WARNING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="clientfunctions.credential_login">
+<code class="descclassname">clientfunctions.</code><code class="descname">credential_login</code><span class="sig-paren">(</span><em>socket1</em>, <em>my_username</em>, <em>my_password</em>, <em>ClientKey</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clientfunctions.html#credential_login"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clientfunctions.credential_login" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to verify if the user has logged in.
+:param socket1: Socket of the server.
+:param my_username: username for logging in.
+:param my_password: Password for logging in.
+:param ClientKey: key to hash the password.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="clientfunctions.new_socket">
+<code class="descclassname">clientfunctions.</code><code class="descname">new_socket</code><span class="sig-paren">(</span><em>IP</em>, <em>PORT</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clientfunctions.html#new_socket"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clientfunctions.new_socket" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates new socket at given PORT of IP
+:param IP: IP of the new socket.
+:param PORT: Port of the new socket.
+:return: A new socket.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clientfunctions.receive_message">
+<code class="descclassname">clientfunctions.</code><code class="descname">receive_message</code><span class="sig-paren">(</span><em>client_socket</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clientfunctions.html#receive_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clientfunctions.receive_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recieves and parses a message which comes from a client/server
+:param client_socket: socket on which the message would be recieved.
+:return: A parsed object consisting of header and the intended message.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clientfunctions.sendmessage">
+<code class="descclassname">clientfunctions.</code><code class="descname">sendmessage</code><span class="sig-paren">(</span><em>socket1</em>, <em>strn</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clientfunctions.html#sendmessage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clientfunctions.sendmessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function to send a message to the desired socket.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>socket1</strong> – socket to which the message must be sent.</li>
+<li><strong>strn</strong> – the message to be sent.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="clientfunctions.sign_up">
+<code class="descclassname">clientfunctions.</code><code class="descname">sign_up</code><span class="sig-paren">(</span><em>socket1</em>, <em>my_username</em>, <em>my_password</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clientfunctions.html#sign_up"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clientfunctions.sign_up" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to register the user on the database.
+:param socket1: Socket of the connected server.
+:param my_username: Username of the new user.
+:param my_password: Password of the new user.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The private key of the client.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ChatterBox</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">ChatterBox-CS251</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ClientAdvanced.html">ClientAdvanced module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ClientAdvanced1.html">ClientAdvanced1 module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DH.html">DH module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ServerAdv.html">ServerAdv module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">clientfunctions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="create_tables.html">create_tables module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="database.html">database module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kbhiT.html">kbhiT module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadbalancer.html">loadbalancer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serverfunctions.html">serverfunctions module</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">ChatterBox-CS251</a><ul>
+      <li>Previous: <a href="ServerAdv.html" title="previous chapter">ServerAdv module</a></li>
+      <li>Next: <a href="create_tables.html" title="next chapter">create_tables module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Aman, Vijay, Aditya.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+      |
+      <a href="_sources/clientfunctions.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

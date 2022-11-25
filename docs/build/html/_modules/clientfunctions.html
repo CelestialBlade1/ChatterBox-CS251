@@ -1,0 +1,296 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>clientfunctions &#8212; ChatterBox  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for clientfunctions</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">socket</span>
+<span class="kn">import</span> <span class="nn">select</span>
+<span class="kn">import</span> <span class="nn">errno</span>
+<span class="kn">import</span> <span class="nn">string</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">Cryptodome.Cipher</span> <span class="k">import</span> <span class="n">AES</span>
+<span class="kn">from</span> <span class="nn">base64</span> <span class="k">import</span> <span class="n">b64encode</span><span class="p">,</span> <span class="n">b64decode</span>
+
+<div class="viewcode-block" id="Crypt"><a class="viewcode-back" href="../clientfunctions.html#clientfunctions.Crypt">[docs]</a><span class="k">class</span> <span class="nc">Crypt</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;A Class Encrypt and decrypt messages.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">salt</span><span class="o">=</span><span class="s1">&#39;SlTeRlOHpygTYkP3&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Constructor for crypt</span>
+<span class="sd">        Crypt created with salt&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">salt</span> <span class="o">=</span> <span class="n">salt</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">enc_dec_method</span> <span class="o">=</span> <span class="s1">&#39;utf-8&#39;</span>
+
+<div class="viewcode-block" id="Crypt.encrypt"><a class="viewcode-back" href="../clientfunctions.html#clientfunctions.Crypt.encrypt">[docs]</a>    <span class="k">def</span> <span class="nf">encrypt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">str_to_enc</span><span class="p">,</span> <span class="n">str_key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Performs AES using public key of a user and encrypts the string.</span>
+<span class="sd">        :param str_to_enc: String to be encrypted</span>
+<span class="sd">        :param str_key: Key to be used for encryption</span>
+
+<span class="sd">        :return: The encrypted string.  </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">aes_obj</span> <span class="o">=</span> <span class="n">AES</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">str_key</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span> <span class="n">AES</span><span class="o">.</span><span class="n">MODE_CFB</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">salt</span><span class="p">)</span>
+            <span class="n">hx_enc</span> <span class="o">=</span> <span class="n">aes_obj</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">str_to_enc</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">))</span>
+            <span class="n">mret</span> <span class="o">=</span> <span class="n">b64encode</span><span class="p">(</span><span class="n">hx_enc</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">enc_dec_method</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">mret</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">value_error</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">value_error</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;IV must be 16 bytes long&#39;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Encryption Error: SALT must be 16 characters long&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">value_error</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;AES key must be either 16, 24, or 32 bytes long&#39;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Encryption Error: Encryption key must be either 16, 24, or 32 characters long&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">value_error</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Crypt.decrypt"><a class="viewcode-back" href="../clientfunctions.html#clientfunctions.Crypt.decrypt">[docs]</a>    <span class="k">def</span> <span class="nf">decrypt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enc_str</span><span class="p">,</span> <span class="n">str_key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Derypts the string using AES by providing the private key. </span>
+<span class="sd">        </span>
+<span class="sd">        :param enc_str: string to be decrypted.</span>
+<span class="sd">        :param str_key: private key for decryption.</span>
+<span class="sd">        :return: The decrypted string.</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">aes_obj</span> <span class="o">=</span> <span class="n">AES</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">str_key</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">),</span> <span class="n">AES</span><span class="o">.</span><span class="n">MODE_CFB</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">salt</span><span class="p">)</span>
+            <span class="n">str_tmp</span> <span class="o">=</span> <span class="n">b64decode</span><span class="p">(</span><span class="n">enc_str</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">enc_dec_method</span><span class="p">))</span>
+            <span class="n">str_dec</span> <span class="o">=</span> <span class="n">aes_obj</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">str_tmp</span><span class="p">)</span>
+            <span class="n">mret</span> <span class="o">=</span> <span class="n">str_dec</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">enc_dec_method</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">mret</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">value_error</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">value_error</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;IV must be 16 bytes long&#39;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Decryption Error: SALT must be 16 characters long&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">value_error</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;AES key must be either 16, 24, or 32 bytes long&#39;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Decryption Error: Encryption key must be either 16, 24, or 32 characters long&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">value_error</span><span class="p">)</span></div></div>
+
+
+<span class="n">HEADER_LENGTH</span> <span class="o">=</span> <span class="mi">10</span>
+
+<div class="viewcode-block" id="bcolors"><a class="viewcode-back" href="../clientfunctions.html#clientfunctions.bcolors">[docs]</a><span class="k">class</span> <span class="nc">bcolors</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Colors for formatting console outputs&quot;&quot;&quot;</span>
+    <span class="n">HEADER</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[95m&#39;</span>
+    <span class="n">OKBLUE</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[94m&#39;</span>
+    <span class="n">OKCYAN</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[96m&#39;</span>
+    <span class="n">OKGREEN</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[92m&#39;</span>
+    <span class="n">WARNING</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[93m&#39;</span>
+    <span class="n">FAIL</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[91m&#39;</span>
+    <span class="n">ENDC</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[0m&#39;</span>
+    <span class="n">BOLD</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[1m&#39;</span>
+    <span class="n">UNDERLINE</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[4m&#39;</span></div>
+
+<div class="viewcode-block" id="sendmessage"><a class="viewcode-back" href="../clientfunctions.html#clientfunctions.sendmessage">[docs]</a><span class="k">def</span> <span class="nf">sendmessage</span><span class="p">(</span><span class="n">socket1</span><span class="p">,</span> <span class="n">strn</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A function to send a message to the desired socket.</span>
+
+<span class="sd">    :param socket1: socket to which the message must be sent.</span>
+<span class="sd">    :param strn: the message to be sent.</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">strn</span> <span class="o">=</span> <span class="n">strn</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="n">strn_header</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;{len(strn):&lt;</span><span class="si">{HEADER_LENGTH}</span><span class="s2">}&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="n">socket1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">strn_header</span> <span class="o">+</span> <span class="n">strn</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="new_socket"><a class="viewcode-back" href="../clientfunctions.html#clientfunctions.new_socket">[docs]</a><span class="k">def</span> <span class="nf">new_socket</span><span class="p">(</span><span class="n">IP</span><span class="p">,</span> <span class="n">PORT</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Creates new socket at given PORT of IP</span>
+<span class="sd">    :param IP: IP of the new socket.</span>
+<span class="sd">    :param PORT: Port of the new socket.</span>
+<span class="sd">    :return: A new socket.&quot;&quot;&quot;</span>
+    <span class="c1"># Create a socket</span>
+    <span class="c1"># socket.AF_INET - address family, IPv4, some otehr possible are AF_INET6, AF_BLUETOOTH, AF_UNIX</span>
+    <span class="c1"># socket.SOCK_STREAM - TCP, conection-based, socket.SOCK_DGRAM - UDP, connectionless, datagrams, socket.SOCK_RAW - raw IP packets</span>
+    <span class="n">client_socket</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
+
+    <span class="c1"># Connect to a given ip and port</span>
+    <span class="n">client_socket</span><span class="o">.</span><span class="n">connect</span><span class="p">((</span><span class="n">IP</span><span class="p">,</span> <span class="n">PORT</span><span class="p">))</span>
+
+    <span class="c1"># Set connection to non-blocking state, so .recv() call won;t block, just return some exception we&#39;ll handle</span>
+    <span class="n">client_socket</span><span class="o">.</span><span class="n">setblocking</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">client_socket</span></div>
+
+<div class="viewcode-block" id="credential_login"><a class="viewcode-back" href="../clientfunctions.html#clientfunctions.credential_login">[docs]</a><span class="k">def</span> <span class="nf">credential_login</span><span class="p">(</span><span class="n">socket1</span><span class="p">,</span> <span class="n">my_username</span><span class="p">,</span> <span class="n">my_password</span><span class="p">,</span> <span class="n">ClientKey</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to verify if the user has logged in.</span>
+<span class="sd">    :param socket1: Socket of the server.</span>
+<span class="sd">    :param my_username: username for logging in.</span>
+<span class="sd">    :param my_password: Password for logging in.</span>
+<span class="sd">    :param ClientKey: key to hash the password.</span>
+
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">crpt</span> <span class="o">=</span> <span class="n">Crypt</span><span class="p">()</span>
+    <span class="n">sendmessage</span><span class="p">(</span><span class="n">socket1</span><span class="p">,</span> <span class="s2">&quot;HELLOFROMCLIENT&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Prepare username and header and send them</span>
+    <span class="c1"># We need to encode username to bytes, then count number of bytes and prepare </span>
+    <span class="c1"># header of fixed size, that we encode to bytes as well</span>
+    <span class="n">username</span> <span class="o">=</span> <span class="n">my_username</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="n">username_header</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;{len(username):&lt;</span><span class="si">{HEADER_LENGTH}</span><span class="s2">}&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="n">socket1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">username_header</span> <span class="o">+</span> <span class="n">username</span><span class="p">)</span>
+
+    <span class="n">pwd</span> <span class="o">=</span> <span class="n">crpt</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">my_password</span><span class="p">,</span> <span class="n">ClientKey</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="n">pwd_header</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;{len(pwd):&lt;</span><span class="si">{HEADER_LENGTH}</span><span class="s2">}&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="n">socket1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">pwd_header</span> <span class="o">+</span> <span class="n">pwd</span><span class="p">)</span> </div>
+
+<div class="viewcode-block" id="receive_message"><a class="viewcode-back" href="../clientfunctions.html#clientfunctions.receive_message">[docs]</a><span class="k">def</span> <span class="nf">receive_message</span><span class="p">(</span><span class="n">client_socket</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Recieves and parses a message which comes from a client/server</span>
+<span class="sd">    :param client_socket: socket on which the message would be recieved.</span>
+<span class="sd">    :return: A parsed object consisting of header and the intended message.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">client_socket</span><span class="o">.</span><span class="n">setblocking</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># Receive our &quot;header&quot; containing message length, it&#39;s size is defined and constant</span>
+        <span class="n">message_header</span> <span class="o">=</span> <span class="n">client_socket</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="n">HEADER_LENGTH</span><span class="p">)</span>
+
+        <span class="c1"># If we received no data, client gracefully closed a connection, for example using socket.close() or socket.shutdown(socket.SHUT_RDWR)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">message_header</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;u&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">client_socket</span><span class="o">.</span><span class="n">setblocking</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># Convert header to int value</span>
+        <span class="n">message_length</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">message_header</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+
+        <span class="c1"># Return an object of message header and message data</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;header&#39;</span><span class="p">:</span> <span class="n">message_header</span><span class="p">,</span> <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">client_socket</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="n">message_length</span><span class="p">)}</span>
+
+    <span class="k">except</span><span class="p">:</span>
+
+        <span class="c1"># If we are here, client closed connection violently, for example by pressing ctrl+c on his script</span>
+        <span class="c1"># or just lost his connection</span>
+        <span class="c1"># socket.close() also invokes socket.shutdown(socket.SHUT_RDWR) what sends information about closing the socket (shutdown read/write)</span>
+        <span class="c1"># and that&#39;s also a cause when we receive an empty message</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="sign_up"><a class="viewcode-back" href="../clientfunctions.html#clientfunctions.sign_up">[docs]</a><span class="k">def</span> <span class="nf">sign_up</span><span class="p">(</span><span class="n">socket1</span><span class="p">,</span> <span class="n">my_username</span><span class="p">,</span> <span class="n">my_password</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function to register the user on the database.</span>
+<span class="sd">    :param socket1: Socket of the connected server.</span>
+<span class="sd">    :param my_username: Username of the new user.</span>
+<span class="sd">    :param my_password: Password of the new user.</span>
+
+<span class="sd">    :return: The private key of the client.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;SIGNUP&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="n">cmd_header</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;{len(cmd):&lt;</span><span class="si">{HEADER_LENGTH}</span><span class="s2">}&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="n">socket1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">cmd_header</span> <span class="o">+</span> <span class="n">cmd</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;sent cmd&quot;</span><span class="p">)</span>
+    
+    <span class="n">username</span> <span class="o">=</span> <span class="n">my_username</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="n">username_header</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;{len(username):&lt;</span><span class="si">{HEADER_LENGTH}</span><span class="s2">}&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="n">socket1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">username_header</span> <span class="o">+</span> <span class="n">username</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;sent username&quot;</span><span class="p">)</span>
+
+    <span class="c1"># using random.choices()</span>
+    <span class="c1"># generating random strings</span>
+    <span class="n">ClientKey</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">choices</span><span class="p">(</span><span class="n">string</span><span class="o">.</span><span class="n">ascii_uppercase</span> <span class="o">+</span>
+                             <span class="n">string</span><span class="o">.</span><span class="n">digits</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">16</span><span class="p">)))</span>
+
+    <span class="n">crpt</span> <span class="o">=</span> <span class="n">Crypt</span><span class="p">()</span>
+    <span class="n">pwd</span> <span class="o">=</span> <span class="n">crpt</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">my_password</span><span class="p">,</span> <span class="n">ClientKey</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="n">pwd_header</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;{len(pwd):&lt;</span><span class="si">{HEADER_LENGTH}</span><span class="s2">}&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="n">socket1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">pwd_header</span> <span class="o">+</span> <span class="n">pwd</span><span class="p">)</span> 
+
+    <span class="k">return</span> <span class="n">ClientKey</span></div>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Hello World&quot;</span><span class="p">)</span>
+    <span class="n">test_crpt</span> <span class="o">=</span> <span class="n">Crypt</span><span class="p">()</span>
+    <span class="n">test_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Lorem ipsum dolor sit amet&quot;&quot;&quot;</span>
+
+
+    <span class="n">test_key</span> <span class="o">=</span> <span class="s1">&#39;MyKey4TestingYnP&#39;</span>
+    <span class="n">test_enc_text</span> <span class="o">=</span> <span class="n">test_crpt</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">test_text</span><span class="p">,</span> <span class="n">test_key</span><span class="p">)</span>
+    <span class="n">test_dec_text</span> <span class="o">=</span> <span class="n">test_crpt</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">test_enc_text</span><span class="p">,</span> <span class="n">test_key</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;Encrypted:</span><span class="si">{test_enc_text}</span><span class="s1">  Decrypted:</span><span class="si">{test_dec_text}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">test_enc_text</span><span class="p">))</span>
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">ChatterBox</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">ChatterBox-CS251</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Aman, Vijay, Aditya.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.8</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

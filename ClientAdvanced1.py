@@ -5,8 +5,8 @@ import select
 import string
 import errno
 import kbhiT
-import sys, os
 import pyDH
+import sys, os
 import clientfunctions as f
 import time
 import random
