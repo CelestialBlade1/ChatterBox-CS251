@@ -89,71 +89,24 @@ else :
 
 
 while True:
-    print("Choose one of the following commands :-")
-    print("READ MESSAGE OF USER (READUSER)")
-    print("READ MESSAGE OF USER (READGROUP)")
-    print("READ MESSAGE TO USER (SENDUSER)")
-    print("SEND MESSAGE TO GROUP (SENDGROUP)")
-    command = input("Enter your Command")
-    
+    kb = kbhiT.KBHit()
 
-    if command == "READUSER":
-        pass
-    elif command == "READGROUP":
-        pass
-    elif command == "SENDUSER":
-        reciever = input("Enter Phone No.")
-        kb = kbhiT.KBHit()
-        if reciever and kb.kbhit():
-            # Wait for user to input a message
-                message = input(f'{my_username} > ')
-                if message.find("EXITNOW") != -1:
-                    client_socket.close()
-                    break
+    if kb.kbhit():
+        # Wait for user to input a message
+        message = input(f'{my_username} > ')
+        if message.find("EXITNOW") != -1:
+            client_socket.close()
+            break
 
-                # If message is not empty - send it
-                if message:
-                    message = reciever +"~"+ message
-                    # Encode message to bytes, prepare header and convert to bytes, like for username above, then send
-                    
-                    message = message.encode('utf-8')
-                    message_header = f"{len(message):<{HEADER_LENGTH}}".encode('utf-8')
-                    client_socket.send(message_header + message)
-    elif command == "SENDGROUP":
-        reciever = input("Enter Group Name")
-        kb = kbhiT.KBHit()
-        if reciever and kb.kbhit():
-            # Wait for user to input a message
-                message = input(f'{my_username} > ')
-                if message.find("EXITNOW") != -1:
-                    client_socket.close()
-                    break
+        # If message is not empty - send it
+        if message:
 
-                # If message is not empty - send it
-                if message:
-                    message = reciever +"~"+ message
-                    # Encode message to bytes, prepare header and convert to bytes, like for username above, then send
-                    
-                    message = message.encode('utf-8')
-                    message_header = f"{len(message):<{HEADER_LENGTH}}".encode('utf-8')
-                    client_socket.send(message_header + message)
-        if kb.kbhit():
-            # Wait for user to input a message
-                message = input(f'{my_username} > ')
-                if message.find("EXITNOW") != -1:
-                    client_socket.close()
-                    break
-
-                # If message is not empty - send it
-                if message:
-                    message = reciever +"~"+ message
-                    # Encode message to bytes, prepare header and convert to bytes, like for username above, then send
-                    
-                    message = message.encode('utf-8')
-                    message_header = f"{len(message):<{HEADER_LENGTH}}".encode('utf-8')
-                    client_socket.send(message_header + message)
-        
-                
+            # Encode message to bytes, prepare header and convert to bytes, like for username above, then send
+            
+            message = message.encode('utf-8')
+            message_header = f"{len(message):<{HEADER_LENGTH}}".encode('utf-8')
+            client_socket.send(message_header + message)
+            
 
     try:
         # Now we want to loop over received messages (there might be more than one) and print them
@@ -195,5 +148,5 @@ while True:
 
     except Exception as e:
         # Any other exception - something happened, exit
-        print('Reading error: {}'.format(str(e)))
+        print('Reading error: '.format(str(e)))
         sys.exit()
