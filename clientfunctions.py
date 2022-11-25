@@ -106,7 +106,7 @@ def new_socket(IP, PORT):
 
     return client_socket
 
-def credential_login(socket1, my_username, my_password, ClientKey):
+def credential_login(socket1, my_username, my_password, ClientKey, uport):
     """Function to verify if the user has logged in.
     :param socket1: Socket of the server.
     :param my_username: username for logging in.
@@ -128,6 +128,8 @@ def credential_login(socket1, my_username, my_password, ClientKey):
     pwd = crpt.encrypt(my_password, ClientKey).encode('utf-8')
     pwd_header = f"{len(pwd):<{HEADER_LENGTH}}".encode('utf-8')
     socket1.send(pwd_header + pwd) 
+
+    sendmessage(socket1, str(uport))
 
 def receive_message(client_socket):
     """Recieves and parses a message which comes from a client/server
@@ -159,7 +161,7 @@ def receive_message(client_socket):
         return False
 
 
-def sign_up(socket1, my_username, my_password):
+def sign_up(socket1, my_username, my_password, uport):
     """Function to register the user on the database.
     :param socket1: Socket of the connected server.
     :param my_username: Username of the new user.
@@ -177,6 +179,8 @@ def sign_up(socket1, my_username, my_password):
     socket1.send(username_header + username)
     print("sent username")
 
+
+
     # using random.choices()
     # generating random strings
     ClientKey = str(''.join(random.choices(string.ascii_uppercase +
@@ -186,6 +190,8 @@ def sign_up(socket1, my_username, my_password):
     pwd = crpt.encrypt(my_password, ClientKey).encode('utf-8')
     pwd_header = f"{len(pwd):<{HEADER_LENGTH}}".encode('utf-8')
     socket1.send(pwd_header + pwd) 
+
+    sendmessage(socket1, str(uport))
 
     return ClientKey
 

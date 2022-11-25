@@ -7,7 +7,11 @@ import sys
 import database as db
 import serverfunctions
 from clientfunctions import Crypt
+
 HEADER_LENGTH = 10
+
+"""This file contains the implementation of server functionalities for a server.
+"""
 
 IP = "127.0.0.1"
 PORT = int(sys.argv[1])
@@ -97,11 +101,12 @@ while True:
             print(cmd)
             # Client should send his name right away, receive it
             user = serverfunctions.receive_message(client_socket)
-
+            
             
             pwd = serverfunctions.receive_message(client_socket)
+            user_port = serverfunctions.receive_message(client_socket)
             server_socket.setblocking(0)
-            print(user, pwd)
+            print(user, pwd, user_port)
 
 
             # If False - client disconnected before he sent his name
@@ -126,7 +131,7 @@ while True:
             print(pwd['data'])
             # Add accepted socket to select.select() list
             sockets_list.append(client_socket)
-            db.userOnline(int(user['data'].decode('utf-8')), IP, PORT)
+            db.userOnline(int(user['data'].decode('utf-8')), IP, int(user_port['data'].decode('utf-8')))
             # Also save username and username header
             clients[client_socket] = user
 
@@ -136,8 +141,8 @@ while True:
         else:
 
             # Receive message
+            reciever = serverfunctions.receive_message(notified_socket)
             message = serverfunctions.receive_message(notified_socket)
-
             # If False, client disconnected, cleanup
             if message is False:
                 temp_socket = socket.socket()
@@ -165,7 +170,12 @@ while True:
             print(f'Received message from {user["data"].decode("utf-8")}: {message["data"].decode("utf-8")}')
 
             # Iterate over connected clients and broadcast message
-            for client_socket in clients:
+            recport = db.getPort(int(reciever['data']))
+            if recport:
+                recsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                recsock.connect(("localhost", int(recport)))
+                recsock.send(user['header'] + user['data'] + message['header'] + message['data'])
+            '''for client_socket in clients:
 
                 # But don't sent it to sender
                 if client_socket != notified_socket:
@@ -173,7 +183,7 @@ while True:
                     # Send user and message (both with their headers)
                     # We are reusing here message header sent by sender, and saved username header send by user when he connected
                     client_socket.send(user['header'] + user['data'] + message['header'] + message['data'])
-
+            '''
     # It's not really necessary to have this, but will handle some socket exceptions just in case
     for notified_socket in exception_sockets:
 

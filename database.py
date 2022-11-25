@@ -47,3 +47,13 @@ def userOnline(user, IP, PORT):
                 SET server_port={PORT}, server_ip='{IP}'
                 WHERE phone_no={user};""")
     conn.commit()
+
+def getPort(user):
+    cur.execute(f"""SELECT server_port FROM General
+                WHERE phone_no={user}
+                """)
+    data = cur.fetchall()
+    if len(data) > 0:
+        return data[0][0]
+    else :
+        return None
