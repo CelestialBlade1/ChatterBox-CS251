@@ -16,6 +16,13 @@ https://www.geeksforgeeks.org/python-generate-random-string-of-given-length/
 kbhit code for Non-blocking input:
 https://stackoverflow.com/questions/2408560/non-blocking-console-input
 
+PostgreSQL
+https://www.geeksforgeeks.org/postgresql-create-table-using-python/?ref=rp
+https://www.postgresqltutorial.com/postgresql-python/create-tables/
+
+
+
+
 
 
 

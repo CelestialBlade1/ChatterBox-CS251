@@ -1,8 +1,10 @@
 import socket
 import select
 import kbhiT as kb
+import clientfunctions
 import time
 import sys
+import database as db
 import serverfunctions
 from clientfunctions import Crypt
 HEADER_LENGTH = 10
@@ -90,28 +92,41 @@ while True:
             # That gives us new socket - client socket, connected to this given client only, it's unique for that client
             # The other returned object is ip/port set
             client_socket, client_address = server_socket.accept()
-
+            server_socket.setblocking(1)
+            cmd = serverfunctions.receive_message(client_socket)
+            print(cmd)
             # Client should send his name right away, receive it
             user = serverfunctions.receive_message(client_socket)
 
-            # If False - client disconnected before he sent his name
-            if user is False:
-                
-                continue
             
             pwd = serverfunctions.receive_message(client_socket)
+            server_socket.setblocking(0)
+            print(user, pwd)
+
+
+            # If False - client disconnected before he sent his name
+            if user is False or cmd is False or pwd is False:
+                
+                continue
+
+            if cmd['data']==b'SIGNUP':
+                    if not db.RegisterUser(int(user['data']), pwd['data'].decode('utf-8')):
+                        client_socket.close()
+                    else:
+                        print("USER HAS SIGNED UP")
             
-            
-            if not serverfunctions.credentials_valid(user['data'], pwd['data']):
-                client_socket.send("## Invalid Credentials ##")
+            elif not serverfunctions.credentials_valid(user['data'], pwd['data'].decode('utf-8')):
+                client_socket.send("INVALID".encode('utf-8'))
                 client_socket.close()
                 continue
+            else:
+                client_socket.send("LOGGEDIN".encode('utf-8'))
             
             
             print(pwd['data'])
             # Add accepted socket to select.select() list
             sockets_list.append(client_socket)
-
+            db.userOnline(int(user['data'].decode('utf-8')), IP, PORT)
             # Also save username and username header
             clients[client_socket] = user
 
@@ -126,7 +141,7 @@ while True:
             # If False, client disconnected, cleanup
             if message is False:
                 temp_socket = socket.socket()
-                temp_socket.connect(IP, 13428)
+                temp_socket.connect((IP, 13428))
                 
                 # Connect to Load Balancer and update number of connections!
                 l = f"USERCLIENTSd567po:{PORT}".encode('utf-8')

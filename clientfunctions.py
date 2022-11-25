@@ -1,6 +1,8 @@
 import socket
 import select
 import errno
+import string
+import random
 import sys
 from Cryptodome.Cipher import AES
 from base64 import b64encode, b64decode
@@ -59,6 +61,10 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
+def sendmessage(socket1, strn):
+    strn = strn.encode('utf-8')
+    strn_header = f"{len(strn):<{HEADER_LENGTH}}".encode('utf-8')
+    socket1.send(strn_header + strn)
 
 def new_socket(IP, PORT):
     """Creates new socket at given PORT of IP"""
@@ -77,6 +83,7 @@ def new_socket(IP, PORT):
 
 def credential_login(socket1, my_username, my_password, ClientKey):
     crpt = Crypt()
+    sendmessage(socket1, "HELLOFROMCLIENT")
 
     # Prepare username and header and send them
     # We need to encode username to bytes, then count number of bytes and prepare 
@@ -87,14 +94,64 @@ def credential_login(socket1, my_username, my_password, ClientKey):
 
     pwd = crpt.encrypt(my_password, ClientKey).encode('utf-8')
     pwd_header = f"{len(pwd):<{HEADER_LENGTH}}".encode('utf-8')
-    socket1.send(pwd_header + pwd)
+    socket1.send(pwd_header + pwd) 
+
+def receive_message(client_socket):
+
+    try:
+        client_socket.setblocking(1)
+        # Receive our "header" containing message length, it's size is defined and constant
+        message_header = client_socket.recv(HEADER_LENGTH)
+
+        # If we received no data, client gracefully closed a connection, for example using socket.close() or socket.shutdown(socket.SHUT_RDWR)
+        if not len(message_header):
+            print("u")
+            return False
+        client_socket.setblocking(0)
+        # Convert header to int value
+        message_length = int(message_header.decode('utf-8').strip())
+
+        # Return an object of message header and message data
+        return {'header': message_header, 'data': client_socket.recv(message_length)}
+
+    except:
+
+        # If we are here, client closed connection violently, for example by pressing ctrl+c on his script
+        # or just lost his connection
+        # socket.close() also invokes socket.shutdown(socket.SHUT_RDWR) what sends information about closing the socket (shutdown read/write)
+        # and that's also a cause when we receive an empty message
+        return False
+
+
+def sign_up(socket1, my_username, my_password):
+    cmd = "SIGNUP".encode('utf-8')
+    cmd_header = f"{len(cmd):<{HEADER_LENGTH}}".encode('utf-8')
+    socket1.send(cmd_header + cmd)
+    print("sent cmd")
+    
+    username = my_username.encode('utf-8')
+    username_header = f"{len(username):<{HEADER_LENGTH}}".encode('utf-8')
+    socket1.send(username_header + username)
+    print("sent username")
+
+    # using random.choices()
+    # generating random strings
+    ClientKey = str(''.join(random.choices(string.ascii_uppercase +
+                             string.digits, k=16)))
+
+    crpt = Crypt()
+    pwd = crpt.encrypt(my_password, ClientKey).encode('utf-8')
+    pwd_header = f"{len(pwd):<{HEADER_LENGTH}}".encode('utf-8')
+    socket1.send(pwd_header + pwd) 
+
+    return ClientKey
 
 if __name__ == "__main__":
     print("Hello World")
     test_crpt = Crypt()
     test_text = """Lorem ipsum dolor sit amet"""
 
-    
+
     test_key = 'MyKey4TestingYnP'
     test_enc_text = test_crpt.encrypt(test_text, test_key)
     test_dec_text = test_crpt.decrypt(test_enc_text, test_key)

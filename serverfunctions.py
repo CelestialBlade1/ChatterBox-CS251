@@ -3,6 +3,7 @@ import select
 import string
 import errno
 import sys
+import database as db
 import clientfunctions as f
 import time
 import random
@@ -10,14 +11,15 @@ HEADER_LENGTH = 10
 def receive_message(client_socket):
 
     try:
-
+        client_socket.setblocking(1)
         # Receive our "header" containing message length, it's size is defined and constant
         message_header = client_socket.recv(HEADER_LENGTH)
 
         # If we received no data, client gracefully closed a connection, for example using socket.close() or socket.shutdown(socket.SHUT_RDWR)
         if not len(message_header):
+            print("u")
             return False
-
+        client_socket.setblocking(0)
         # Convert header to int value
         message_length = int(message_header.decode('utf-8').strip())
 
@@ -33,4 +35,5 @@ def receive_message(client_socket):
         return False
 
 def credentials_valid(username, hashed_password):
-    return True
+    return db.Login(int(username),hashed_password)
+

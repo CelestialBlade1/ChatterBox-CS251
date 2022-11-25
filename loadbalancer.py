@@ -132,23 +132,7 @@ while True:
         # Else existing socket is sending a message
         else:
             continue
-            # Receive message
-            message = serverfunctions.receive_message(notified_socket)
-
-            # If False, client disconnected, cleanup
-            if message is False:
-                print(f"\n{sockets_list}")
-                continue
-                print('Closed connection from: {}'.format(server_connec[notified_socket][0][1]))
-
-                # Remove from list for socket.socket()
-                sockets_list.remove(notified_socket)
-
-                # Remove from our list of users
-                del server_connec[notified_socket]
-
-                continue
-
+            
             
     # It's not really necessary to have this, but will handle some socket exceptions just in case
     for notified_socket in exception_sockets:

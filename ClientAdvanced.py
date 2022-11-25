@@ -18,10 +18,7 @@ my_username = input("Username: ")
 my_pwd = input("Password: ")
 
 
-# using random.choices()
-# generating random strings
-ClientKey = str(''.join(random.choices(string.ascii_uppercase +
-                             string.digits, k=16)))
+
 
 
 client_socket = f.new_socket(IP, PORT)
@@ -32,15 +29,18 @@ client_header = f"{len(userclient):<{HEADER_LENGTH}}".encode('utf-8')
 client_socket.send(client_header + userclient)
 time.sleep(2.5)
 
-# Receives new server details
+# Receives new server details from load balancer
 message_header = client_socket.recv(HEADER_LENGTH)
 message_length = int(message_header.decode('utf-8').strip())
 message = client_socket.recv(message_length).decode('utf-8')
 message_list = message.split(':')
 print(message_list)
 client_socket.close()
+
+# Connects to assigned server
 client_socket = f.new_socket(message_list[0], int(message_list[1]))
 
+# Login
 f.credential_login(client_socket, my_username, my_pwd, ClientKey)
 
 
