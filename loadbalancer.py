@@ -1,3 +1,6 @@
+"""This class code for the implementation of a node balancer using ROUND ROBIN ALGORITHM.
+"""
+
 import socket, sys
 import select
 import kbhiT as kb

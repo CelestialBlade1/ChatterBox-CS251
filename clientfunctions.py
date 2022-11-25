@@ -8,14 +8,23 @@ from Cryptodome.Cipher import AES
 from base64 import b64encode, b64decode
 
 class Crypt:
+    """A Class Encrypt and decrypt messages.
+
+    """
 
     def __init__(self, salt='SlTeRlOHpygTYkP3'):
-        """Crypt created with salt"""
+        """Constructor for crypt
+        Crypt created with salt"""
         self.salt = salt.encode('utf8')
         self.enc_dec_method = 'utf-8'
 
     def encrypt(self, str_to_enc, str_key):
-        """Performs standard encryption"""
+        """Performs AES using public key of a user and encrypts the string.
+        :param str_to_enc: String to be encrypted
+        :param str_key: Key to be used for encryption
+
+        :return: The encrypted string.  
+        """
         try:
             aes_obj = AES.new(str_key.encode('utf-8'), AES.MODE_CFB, self.salt)
             hx_enc = aes_obj.encrypt(str_to_enc.encode('utf8'))
@@ -31,7 +40,13 @@ class Crypt:
 
     def decrypt(self, enc_str, str_key):
         """
-        Derypts the files """
+        Derypts the string using AES by providing the private key. 
+        
+        :param enc_str: string to be decrypted.
+        :param str_key: private key for decryption.
+        :return: The decrypted string.
+        :rtype: str
+        """
         try:
             aes_obj = AES.new(str_key.encode('utf8'), AES.MODE_CFB, self.salt)
             str_tmp = b64decode(enc_str.encode(self.enc_dec_method))
@@ -62,12 +77,22 @@ class bcolors:
     UNDERLINE = '\033[4m'
 
 def sendmessage(socket1, strn):
+    """A function to send a message to the desired socket.
+
+    :param socket1: socket to which the message must be sent.
+    :param strn: the message to be sent.
+
+
+    """
     strn = strn.encode('utf-8')
     strn_header = f"{len(strn):<{HEADER_LENGTH}}".encode('utf-8')
     socket1.send(strn_header + strn)
 
 def new_socket(IP, PORT):
-    """Creates new socket at given PORT of IP"""
+    """Creates new socket at given PORT of IP
+    :param IP: IP of the new socket.
+    :param PORT: Port of the new socket.
+    :return: A new socket."""
     # Create a socket
     # socket.AF_INET - address family, IPv4, some otehr possible are AF_INET6, AF_BLUETOOTH, AF_UNIX
     # socket.SOCK_STREAM - TCP, conection-based, socket.SOCK_DGRAM - UDP, connectionless, datagrams, socket.SOCK_RAW - raw IP packets
@@ -82,6 +107,14 @@ def new_socket(IP, PORT):
     return client_socket
 
 def credential_login(socket1, my_username, my_password, ClientKey):
+    """Function to verify if the user has logged in.
+    :param socket1: Socket of the server.
+    :param my_username: username for logging in.
+    :param my_password: Password for logging in.
+    :param ClientKey: key to hash the password.
+
+    :return: None
+    """
     crpt = Crypt()
     sendmessage(socket1, "HELLOFROMCLIENT")
 
@@ -97,7 +130,10 @@ def credential_login(socket1, my_username, my_password, ClientKey):
     socket1.send(pwd_header + pwd) 
 
 def receive_message(client_socket):
-
+    """Recieves and parses a message which comes from a client/server
+    :param client_socket: socket on which the message would be recieved.
+    :return: A parsed object consisting of header and the intended message.
+    """
     try:
         client_socket.setblocking(1)
         # Receive our "header" containing message length, it's size is defined and constant
@@ -124,6 +160,13 @@ def receive_message(client_socket):
 
 
 def sign_up(socket1, my_username, my_password):
+    """Function to register the user on the database.
+    :param socket1: Socket of the connected server.
+    :param my_username: Username of the new user.
+    :param my_password: Password of the new user.
+
+    :return: The private key of the client.
+    """
     cmd = "SIGNUP".encode('utf-8')
     cmd_header = f"{len(cmd):<{HEADER_LENGTH}}".encode('utf-8')
     socket1.send(cmd_header + cmd)

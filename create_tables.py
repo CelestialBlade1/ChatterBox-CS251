@@ -1,7 +1,10 @@
 import psycopg2
 
 def create_tables():
-    """ create tables in the PostgreSQL database"""
+    """ Create Tables in the PostgreSQL database
+
+        Includes commands to generate tables required to the support the chat application.
+    """
     commands = ("""DROP TABLE General CASCADE""","""DROP TABLE GroupTable""",
         """
         CREATE TABLE General (

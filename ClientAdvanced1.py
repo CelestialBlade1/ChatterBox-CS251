@@ -1,3 +1,5 @@
+"""This python file contains the code for the implementation of the client side of the char application."""
+
 import socket
 import select
 import string
