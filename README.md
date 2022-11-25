@@ -34,8 +34,8 @@ We are using the Round Robin Algorithm in our project. Whenever a new request is
 ### Instructions to run code.
     0. Make sure the dependencies mentioned are installed and working correctly.
     1. Start Load Balancer using python3 loadbalancer.py ROUNDROBIN
-    2. Start the required number of servers using python3 serverAdv.py <port_number>
-    3. Start the required number of clients by running python3 clientAdv.py
+    2. Start the required number of servers using python3 ServerAdv.py <port_number>
+    3. Start the required number of clients by running python3 ClientAdvanced.py
 
 
 
