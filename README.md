@@ -46,9 +46,9 @@ We are using the Round Robin Algorithm in our project. Whenever a new request is
     
     such as
     
-    ```
+    `
     python server.py 8887
-    ```
+    `
     
     2. Now the clients can be launched
     
