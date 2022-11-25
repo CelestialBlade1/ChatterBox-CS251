@@ -33,21 +33,29 @@ We are using the Round Robin Algorithm in our project. Whenever a new request is
 
 ### Instructions to run code.
     0. First open the load balancer as
+    
     ```
     python loadbalancer.py ROUNDROBIN
     ```
+    
     1. Next you want to launch the servers as:
+    
     ```
     python server.py <localhost_port_no>
     ```
+    
     such as
+    
     ```
     python server.py 8887
     ```
+    
     2. Now the clients can be launched
+    
     ```
     python client.py <localhost_port_no>
     ```
+    
     3. The client interfaces are ready to be used. Enter recipient user IDs to send DMs.
 
 
