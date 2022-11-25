@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>clientfunctions &mdash; Fastchat  documentation</title><link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Fastchat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Project</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Fastchat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Module code</a> &raquo;</li>
+      <li>clientfunctions</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for clientfunctions</h1><div class="highlight"><pre>
+<span></span>
+<span class="kn">import</span> <span class="nn">socket</span>
+<span class="kn">import</span> <span class="nn">select</span>
+<span class="kn">import</span> <span class="nn">errno</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">Cryptodome.Cipher</span> <span class="k">import</span> <span class="n">AES</span>
+<span class="kn">from</span> <span class="nn">base64</span> <span class="k">import</span> <span class="n">b64encode</span><span class="p">,</span> <span class="n">b64decode</span>
+
+<div class="viewcode-block" id="Crypt"><a class="viewcode-back" href="../clientfunctions.html#clientfunctions.Crypt">[docs]</a><span class="k">class</span> <span class="nc">Crypt</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Performs standard ecryption.</span>
+<span class="sd">    Decrypts the files.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Crypt.__init__"><a class="viewcode-back" href="../clientfunctions.html#clientfunctions.Crypt.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">salt</span><span class="o">=</span><span class="s1">&#39;SlTeRlOHpygTYkP3&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Crypt created with salt</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">salt</span> <span class="o">=</span> <span class="n">salt</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">enc_dec_method</span> <span class="o">=</span> <span class="s1">&#39;utf-8&#39;</span></div>
+
+<div class="viewcode-block" id="Crypt.encrypt"><a class="viewcode-back" href="../clientfunctions.html#clientfunctions.Crypt.encrypt">[docs]</a>    <span class="k">def</span> <span class="nf">encrypt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">str_to_enc</span><span class="p">,</span> <span class="n">str_key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Performs standard encryption</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">aes_obj</span> <span class="o">=</span> <span class="n">AES</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">str_key</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">),</span> <span class="n">AES</span><span class="o">.</span><span class="n">MODE_CFB</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">salt</span><span class="p">)</span>
+            <span class="n">hx_enc</span> <span class="o">=</span> <span class="n">aes_obj</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">str_to_enc</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">))</span>
+            <span class="n">mret</span> <span class="o">=</span> <span class="n">b64encode</span><span class="p">(</span><span class="n">hx_enc</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">enc_dec_method</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">mret</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">value_error</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">value_error</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;IV must be 16 bytes long&#39;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Encryption Error: SALT must be 16 characters long&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">value_error</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;AES key must be either 16, 24, or 32 bytes long&#39;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Encryption Error: Encryption key must be either 16, 24, or 32 characters long&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">value_error</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Crypt.decrypt"><a class="viewcode-back" href="../clientfunctions.html#clientfunctions.Crypt.decrypt">[docs]</a>    <span class="k">def</span> <span class="nf">decrypt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enc_str</span><span class="p">,</span> <span class="n">str_key</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Derypts the files </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">aes_obj</span> <span class="o">=</span> <span class="n">AES</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">str_key</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf8&#39;</span><span class="p">),</span> <span class="n">AES</span><span class="o">.</span><span class="n">MODE_CFB</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">salt</span><span class="p">)</span>
+            <span class="n">str_tmp</span> <span class="o">=</span> <span class="n">b64decode</span><span class="p">(</span><span class="n">enc_str</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">enc_dec_method</span><span class="p">))</span>
+            <span class="n">str_dec</span> <span class="o">=</span> <span class="n">aes_obj</span><span class="o">.</span><span class="n">decrypt</span><span class="p">(</span><span class="n">str_tmp</span><span class="p">)</span>
+            <span class="n">mret</span> <span class="o">=</span> <span class="n">str_dec</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">enc_dec_method</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">mret</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">value_error</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">value_error</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;IV must be 16 bytes long&#39;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Decryption Error: SALT must be 16 characters long&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">value_error</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;AES key must be either 16, 24, or 32 bytes long&#39;</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Decryption Error: Encryption key must be either 16, 24, or 32 characters long&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">value_error</span><span class="p">)</span></div></div>
+
+
+<span class="n">HEADER_LENGTH</span> <span class="o">=</span> <span class="mi">10</span>
+
+<div class="viewcode-block" id="bcolors"><a class="viewcode-back" href="../clientfunctions.html#clientfunctions.bcolors">[docs]</a><span class="k">class</span> <span class="nc">bcolors</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Colors for formatting console outputs</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">HEADER</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[95m&#39;</span>
+    <span class="n">OKBLUE</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[94m&#39;</span>
+    <span class="n">OKCYAN</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[96m&#39;</span>
+    <span class="n">OKGREEN</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[92m&#39;</span>
+    <span class="n">WARNING</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[93m&#39;</span>
+    <span class="n">FAIL</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[91m&#39;</span>
+    <span class="n">ENDC</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[0m&#39;</span>
+    <span class="n">BOLD</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[1m&#39;</span>
+    <span class="n">UNDERLINE</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[4m&#39;</span></div>
+
+
+<div class="viewcode-block" id="new_socket"><a class="viewcode-back" href="../clientfunctions.html#clientfunctions.new_socket">[docs]</a><span class="k">def</span> <span class="nf">new_socket</span><span class="p">(</span><span class="n">IP</span><span class="p">,</span> <span class="n">PORT</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Creates new socket at given PORT of IP</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Create a socket</span>
+    <span class="c1"># socket.AF_INET - address family, IPv4, some otehr possible are AF_INET6, AF_BLUETOOTH, AF_UNIX</span>
+    <span class="c1"># socket.SOCK_STREAM - TCP, conection-based, socket.SOCK_DGRAM - UDP, connectionless, datagrams, socket.SOCK_RAW - raw IP packets</span>
+    <span class="n">client_socket</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
+
+    <span class="c1"># Connect to a given ip and port</span>
+    <span class="n">client_socket</span><span class="o">.</span><span class="n">connect</span><span class="p">((</span><span class="n">IP</span><span class="p">,</span> <span class="n">PORT</span><span class="p">))</span>
+
+    <span class="c1"># Set connection to non-blocking state, so .recv() call won;t block, just return some exception we&#39;ll handle</span>
+    <span class="n">client_socket</span><span class="o">.</span><span class="n">setblocking</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">client_socket</span></div>
+
+<div class="viewcode-block" id="credential_login"><a class="viewcode-back" href="../clientfunctions.html#clientfunctions.credential_login">[docs]</a><span class="k">def</span> <span class="nf">credential_login</span><span class="p">(</span><span class="n">socket1</span><span class="p">,</span> <span class="n">my_username</span><span class="p">,</span> <span class="n">my_password</span><span class="p">,</span> <span class="n">ClientKey</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;To encode the username to bytes, and prepare and encode header to bytes as well</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">crpt</span> <span class="o">=</span> <span class="n">Crypt</span><span class="p">()</span>
+
+    <span class="c1"># Prepare username and header and send them</span>
+    <span class="c1"># We need to encode username to bytes, then count number of bytes and prepare </span>
+    <span class="c1"># header of fixed size, that we encode to bytes as well</span>
+    <span class="n">username</span> <span class="o">=</span> <span class="n">my_username</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="n">username_header</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;{len(username):&lt;</span><span class="si">{HEADER_LENGTH}</span><span class="s2">}&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="n">socket1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">username_header</span> <span class="o">+</span> <span class="n">username</span><span class="p">)</span>
+
+    <span class="n">pwd</span> <span class="o">=</span> <span class="n">crpt</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="n">my_password</span><span class="p">,</span> <span class="n">ClientKey</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="n">pwd_header</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;{len(pwd):&lt;</span><span class="si">{HEADER_LENGTH}</span><span class="s2">}&quot;</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="n">socket1</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">pwd_header</span> <span class="o">+</span> <span class="n">pwd</span><span class="p">)</span></div>
+
+<span class="c1">#if __name__ == &quot;__main__&quot;:</span>
+<span class="c1">#    print(&quot;Hello World&quot;)</span>
+<span class="c1">#    test_crpt = Crypt()</span>
+<span class="c1">#    test_text = &quot;&quot;&quot;Lorem ipsum dolor sit amet&quot;&quot;&quot;</span>
+
+    
+<span class="c1">#    test_key = &#39;MyKey4TestingYnP&#39;</span>
+<span class="c1">#    test_enc_text = test_crpt.encrypt(test_text, test_key)</span>
+<span class="c1">#    test_dec_text = test_crpt.decrypt(test_enc_text, test_key)</span>
+<span class="c1">#    print(f&#39;Encrypted:{test_enc_text}  Decrypted:{test_dec_text}&#39;)</span>
+<span class="c1">#    print(type(test_enc_text))</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Chatterbox.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

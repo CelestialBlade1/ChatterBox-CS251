@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>clientfunctions module &mdash; Fastchat  documentation</title><link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="ServerAdv module" href="ServerAdv.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Fastchat
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Contents</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Project</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="ClientAdvanced.html">ClientAdvanced module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DH.html">DH module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ServerAdv.html">ServerAdv module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">clientfunctions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kbhiT.html">kbhiT module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="loadbalancer.html">loadbalancer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serverfunctions.html">serverfunctions module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Fastchat</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="modules.html">Project</a> &raquo;</li>
+      <li>clientfunctions module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/clientfunctions.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="section" id="module-clientfunctions">
+<span id="clientfunctions-module"></span><h1>clientfunctions module<a class="headerlink" href="#module-clientfunctions" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="clientfunctions.Crypt">
+<em class="property">class </em><code class="descclassname">clientfunctions.</code><code class="descname">Crypt</code><span class="sig-paren">(</span><em>salt='SlTeRlOHpygTYkP3'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clientfunctions.html#Crypt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clientfunctions.Crypt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Performs standard ecryption.
+Decrypts the files.</p>
+<dl class="method">
+<dt id="clientfunctions.Crypt.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>salt='SlTeRlOHpygTYkP3'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clientfunctions.html#Crypt.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clientfunctions.Crypt.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Crypt created with salt</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="clientfunctions.Crypt.decrypt">
+<code class="descname">decrypt</code><span class="sig-paren">(</span><em>enc_str</em>, <em>str_key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clientfunctions.html#Crypt.decrypt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clientfunctions.Crypt.decrypt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Derypts the files</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="clientfunctions.Crypt.encrypt">
+<code class="descname">encrypt</code><span class="sig-paren">(</span><em>str_to_enc</em>, <em>str_key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clientfunctions.html#Crypt.encrypt"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clientfunctions.Crypt.encrypt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs standard encryption</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="clientfunctions.bcolors">
+<em class="property">class </em><code class="descclassname">clientfunctions.</code><code class="descname">bcolors</code><a class="reference internal" href="_modules/clientfunctions.html#bcolors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clientfunctions.bcolors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Colors for formatting console outputs</p>
+<dl class="attribute">
+<dt id="clientfunctions.bcolors.BOLD">
+<code class="descname">BOLD</code><em class="property"> = '\x1b[1m'</em><a class="headerlink" href="#clientfunctions.bcolors.BOLD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clientfunctions.bcolors.ENDC">
+<code class="descname">ENDC</code><em class="property"> = '\x1b[0m'</em><a class="headerlink" href="#clientfunctions.bcolors.ENDC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clientfunctions.bcolors.FAIL">
+<code class="descname">FAIL</code><em class="property"> = '\x1b[91m'</em><a class="headerlink" href="#clientfunctions.bcolors.FAIL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clientfunctions.bcolors.HEADER">
+<code class="descname">HEADER</code><em class="property"> = '\x1b[95m'</em><a class="headerlink" href="#clientfunctions.bcolors.HEADER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clientfunctions.bcolors.OKBLUE">
+<code class="descname">OKBLUE</code><em class="property"> = '\x1b[94m'</em><a class="headerlink" href="#clientfunctions.bcolors.OKBLUE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clientfunctions.bcolors.OKCYAN">
+<code class="descname">OKCYAN</code><em class="property"> = '\x1b[96m'</em><a class="headerlink" href="#clientfunctions.bcolors.OKCYAN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clientfunctions.bcolors.OKGREEN">
+<code class="descname">OKGREEN</code><em class="property"> = '\x1b[92m'</em><a class="headerlink" href="#clientfunctions.bcolors.OKGREEN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clientfunctions.bcolors.UNDERLINE">
+<code class="descname">UNDERLINE</code><em class="property"> = '\x1b[4m'</em><a class="headerlink" href="#clientfunctions.bcolors.UNDERLINE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="clientfunctions.bcolors.WARNING">
+<code class="descname">WARNING</code><em class="property"> = '\x1b[93m'</em><a class="headerlink" href="#clientfunctions.bcolors.WARNING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="clientfunctions.credential_login">
+<code class="descclassname">clientfunctions.</code><code class="descname">credential_login</code><span class="sig-paren">(</span><em>socket1</em>, <em>my_username</em>, <em>my_password</em>, <em>ClientKey</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clientfunctions.html#credential_login"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clientfunctions.credential_login" title="Permalink to this definition">¶</a></dt>
+<dd><p>To encode the username to bytes, and prepare and encode header to bytes as well</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="clientfunctions.new_socket">
+<code class="descclassname">clientfunctions.</code><code class="descname">new_socket</code><span class="sig-paren">(</span><em>IP</em>, <em>PORT</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/clientfunctions.html#new_socket"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#clientfunctions.new_socket" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates new socket at given PORT of IP</p>
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ServerAdv.html" class="btn btn-neutral float-left" title="ServerAdv module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Chatterbox.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
